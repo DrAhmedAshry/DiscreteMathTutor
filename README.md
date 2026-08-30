@@ -1,4 +1,4 @@
-# DiscreteMathGUC
+# DiscreteMathTutor
 CourseMind v1 - TutorPack v1
 # How to use the Discrete Mathematics tutor
 
