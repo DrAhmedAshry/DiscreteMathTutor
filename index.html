@@ -46,11 +46,23 @@ body{
 header{padding:34px 0 18px}
 h1.brand{font-size:1.32rem;margin:0 0 4px;letter-spacing:-.01em}
 .sub{color:var(--ink-faint);font-size:.86rem;margin:0}
-.demo{
-  margin:16px 0 0;padding:10px 14px;border-radius:8px;
-  background:var(--warn-soft);border:1px solid var(--line);
-  color:var(--warn);font-size:.82rem;line-height:1.5;
+/* The permanent "How to ask" panel required by TP00 section 12.1. It
+   replaced a panel that spoke to the owner rather than to a student. */
+.howto{
+  margin:16px 0 0;border:1px solid var(--line);border-radius:8px;
+  background:var(--card);font-size:.85rem;
 }
+.howto summary{
+  cursor:pointer;padding:11px 14px;font-weight:600;color:var(--ink-soft);
+  list-style:none;
+}
+.howto summary::-webkit-details-marker{display:none}
+.howto summary::before{content:"▸ ";color:var(--ink-faint)}
+.howto[open] summary::before{content:"▾ "}
+.howto summary:hover{color:var(--accent)}
+.howto-body{padding:0 16px 6px;line-height:1.6;color:var(--ink-soft)}
+.howto-body p{margin:0 0 11px}
+.howto-body b{color:var(--ink)}
 
 /* ---------- ask box ---------- */
 .askbox{
@@ -171,9 +183,16 @@ button.ref:hover{text-decoration-thickness:2px}
 .card .msg.bad{color:var(--accent)}
 .card .msg.good{color:var(--good)}
 .state{
-  margin:16px 0 0;padding:11px 14px;border-radius:8px;background:var(--accent-soft);
-  border:1px solid var(--line);font-size:.85rem;line-height:1.5;
+  margin:10px 0 0;padding:11px 14px;border-radius:8px;border:1px solid var(--line);
+  border-left:4px solid var(--ink-faint);
+  background:var(--card);font-size:.85rem;line-height:1.5;
 }
+/* The Level column in the State tab chooses this. */
+.state.normal   {border-left-color:var(--ink-faint)}
+.state.important{border-left-color:var(--warn);background:var(--warn-soft)}
+.state.urgent   {border-left-color:var(--accent);background:var(--accent-soft)}
+.state.important b{color:var(--warn)}
+.state.urgent b{color:var(--accent)}
 .state b{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;
   color:var(--ink-faint);margin:0 0 4px}
 .who{font-size:.78rem;color:var(--ink-faint);margin-top:6px}
@@ -208,6 +227,9 @@ button.ref:hover{text-decoration-thickness:2px}
   font-size:.79rem;color:var(--ink-faint);flex-wrap:wrap;
 }
 .logbar button{padding:5px 11px;font-size:.79rem}
+/* display:flex above would otherwise defeat the browser's own rule for a
+   hidden element, and the bar would stay on the page for every student. */
+.logbar[hidden]{display:none}
 footer{margin:44px 0 0;font-size:.8rem;color:var(--ink-faint);text-align:center;line-height:1.7}
 .hidden{display:none !important}
 </style>
@@ -219,12 +241,30 @@ footer{margin:44px 0 0;font-size:.8rem;color:var(--ink-faint);text-align:center;
   <h1 class="brand">Discrete Mathematics Tutor</h1>
   <p class="sub">MATH-501 / 305 · German University in Cairo · Dr. Ahmed Ashry</p>
   <div class="who" id="who"></div>
-  <div class="demo" id="demo">
-    <b>Demonstrator.</b> This is a working test of the search and the effort gate, built from
-    <span id="ncount">0</span> library entries. It is not the finished tutor: there is no sign-in,
-    nothing is recorded anywhere, and it works only on this computer. Ask it real questions and
-    break it — the log at the bottom of the page is what tells us where it fails.
-  </div>
+  <details class="howto" id="howto">
+    <summary>How to ask, and what this tutor will and will not do</summary>
+    <div class="howto-body">
+      <p><b>Name the idea, or name the exercise.</b> One sentence is enough. You do not need to be
+      polite or formal — you need to be specific. <i>"In PA06 Exercise 3, why is the empty set a
+      subset?"</i> works; <i>"sets??"</i> does not.</p>
+      <p><b>It knows this course, and nothing else.</b> Your lecture slides, your practice
+      assignments and their solutions, and past exams and quizzes. Every answer was written in
+      advance by your instructor. Nothing here is invented at the moment you ask, and when the
+      tutor is not confident it says so instead of answering anyway.</p>
+      <p><b>You will not be given a full solution on the first request.</b> Take three hints, or
+      post what you have tried — a few honest lines — and the answer opens straight away. Reading a
+      solution feels like learning and is not; the mark you get comes from what you can do with a
+      blank page. <b>Explanations, definitions and questions about the course are never withheld.</b></p>
+      <p><b>Model answers to past exams are not published here.</b> The solution files kept beside
+      the old papers are incomplete, and in places belong to questions that were later replaced.
+      Instead you are pointed to the practice exercises that use the same ideas, whose solutions
+      were written to be published and are reliable.</p>
+      <p><b>Please write in English.</b> Academic English is a skill this degree expects of you,
+      and a clearly expressed question gets a more reliable answer.</p>
+      <p><b>If nothing matches</b>, send the question to Dr Ashry with the button that appears.
+      Questions collected that way get proper answers added to the tutor, often within the week.</p>
+    </div>
+  </details>
 </header>
 
 <div class="askbox">
@@ -245,7 +285,7 @@ footer{margin:44px 0 0;font-size:.8rem;color:var(--ink-faint);text-align:center;
 </footer>
 </div>
 
-<div class="logbar">
+<div class="logbar" id="logbar" hidden>
   <span><b id="logn">0</b> questions asked this session · <b id="logmiss">0</b> with no good match</span>
   <button id="copylog">Copy the log</button>
   <button id="clearlog">Clear</button>
@@ -261,7 +301,6 @@ footer{margin:44px 0 0;font-size:.8rem;color:var(--ink-faint);text-align:center;
    ===================================================================== */
 const DB = JSON.parse(document.getElementById("bundle").textContent);
 const ENTRIES = DB.entries;
-document.getElementById("ncount").textContent = ENTRIES.length;
 
 /* ========================================================================
    2. TEXT NORMALISATION
@@ -408,8 +447,12 @@ function idf(t){
    franco-Arabic spelling. Try to rescue it: a shared prefix, or one
    character wrong. Cheap, and it turns "surjektive" into "surjective". */
 const VOCAB_A = Array.from(VOCAB);
+/* 0.72 was loose enough to turn "lawyer" and "liars" into course words and
+   then answer a question that was not about the course at all. The bar was
+   raised until the junk set of TP12 section 17 stopped being rescued, while
+   real misspellings such as "surjektive" still were. */
 function rescue(tok){
-  if (VOCAB.has(tok) || tok.length < 4) return null;
+  if (VOCAB.has(tok) || tok.length < 5) return null;
   let best = null, bestScore = 0;
   for (const v of VOCAB_A){
     if (Math.abs(v.length - tok.length) > 2) continue;
@@ -420,7 +463,7 @@ function rescue(tok){
     const s = common / Math.max(v.length, tok.length);
     if (s > bestScore){ bestScore = s; best = v; }
   }
-  return bestScore >= 0.72 ? best : null;
+  return bestScore >= 0.82 ? best : null;
 }
 
 
@@ -574,7 +617,13 @@ function search(qRaw){
   const scores = new Map();
   const add = (e, s) => scores.set(e, (scores.get(e) || 0) + s);
 
-  for (const [e, s] of directHits(qRaw)) add(e, s);
+  /* A student who names the exercise is never second-guessed. */
+  const named = new Set();
+  for (const [e, s] of directHits(qRaw)){ add(e, s); named.add(e); }
+
+  /* The score BEFORE any intent adjustment. Acceptance is decided on this
+     and on nothing else -- see the note above ANSWER_AT. */
+  const base = new Map();
 
   /* What the student is evidently after. Read once, not once per entry. */
   const ql = " " + qRaw.toLowerCase() + " ";
@@ -610,12 +659,14 @@ function search(qRaw){
       if (!sCov && !wCov) continue;
       const cov = (n) => 0.35 + 0.65 * (n / uniq.length);
       let s = strong * cov(sCov) + 0.30 * weak * cov(sCov + wCov);
+      base.set(e, s);
 
       /* whole-phrasing bonus */
       for (const p of e._phrases){
         if (!p) continue;
-        if (p === qPhrase) { s += 40; break; }
-        if (qPhrase.length > 8 && (p.includes(qPhrase) || qPhrase.includes(p))) { s += 14; break; }
+        if (p === qPhrase) { s += 40; base.set(e, base.get(e) + 40); break; }
+        if (qPhrase.length > 8 && (p.includes(qPhrase) || qPhrase.includes(p))) {
+          s += 14; base.set(e, base.get(e) + 14); break; }
       }
 
       /* Intent. "What does bipartite mean" wants the explanation, not the
@@ -658,7 +709,10 @@ function search(qRaw){
     }
   }
 
-  const out = Array.from(scores.entries()).map(([e, s]) => ({ e, s }));
+  const out = Array.from(scores.entries()).map(([e, s]) => ({
+    e: e, s: s,
+    base: named.has(e) ? Infinity : (base.get(e) || 0)
+  }));
   out.sort((a, b) => b.s - a.s);
   return { list: out.slice(0, 6), terms: uniq.length,
            unmatched: toks0.length - toks.length, sem: !!sem };
@@ -918,10 +972,16 @@ function show(e, alts){
   out.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-function nothing(qRaw, near){
-  let h = '<div class="nomatch"><p><strong>I do not have a prepared answer for exactly that.</strong> '
-    + "Everything here was written in advance from this course's own material, so when nothing matches "
-    + "I would rather say so than invent something.</p>";
+function nothing(qRaw, near, unsure){
+  let h = '<div class="nomatch"><p><strong>'
+    + (unsure
+        ? "I am not sure that is a question about this course."
+        : "I do not have a prepared answer for exactly that.")
+    + "</strong> "
+    + "Everything here was written in advance from this course's own material, so when I am not "
+    + "confident I would rather say so than answer anyway."
+    + (unsure ? " If one of these is what you meant, open it." : "")
+    + "</p>";
   if (DESK){
     h += '<p><button class="primary" id="gapbtn">Send this question to Dr Ashry</button> '
       + '<span id="gapdone" style="font-size:.85rem;color:var(--ink-faint)"></span></p>';
@@ -967,7 +1027,29 @@ function logAsk(q, res){
   document.getElementById("logmiss").textContent = LOG.filter(x => x.miss).length;
 }
 
-const MIN = 2.2;   // below this, say honestly that nothing matched
+/* ------------------------------------------------------------------
+   HOW SURE THE TUTOR HAS TO BE BEFORE IT ANSWERS
+
+   The tutor cannot invent an answer -- it has none to invent, and every
+   word it shows was written in advance. But it CAN retrieve the least
+   bad of 366 entries and present it as though it were the answer, and to
+   a student that is indistinguishable from a machine making things up.
+   "All lawyers are liars, and I am a lawyer" was answered with a set
+   theory exercise. That is the fault these two numbers fix.
+
+   They are decided on the score BEFORE the intent adjustments, because
+   those adjustments exist to order good matches, not to promote weak
+   ones. "How much is my car worth" reached 53 only because "worth"
+   triggered the course-question boost twice over; its honest score is 24.
+
+   Both numbers were chosen by measurement, not by feel: a set of inputs
+   that must be refused was run against a set that must be answered, and
+   the bar was put in the gap between them. TP12 section 17 records the
+   two lists and the numbers on the day.
+   ------------------------------------------------------------------ */
+const ANSWER_AT = 25;   // at or above this, answer plainly
+const OFFER_AT  = 10;   // between the two, offer it without confidence
+const MIN = 2.2;        // kept for the session log's idea of a miss
 
 
 /* ========================================================================
@@ -1014,14 +1096,24 @@ function deskGet(what){
 }
 
 /* ---- the announcements panel, read on every visit (TP00 s.14) ---- */
+/* The desk sends a list of notices that are live TODAY, already in the
+   order the owner chose. The page adds nothing of its own: it does not
+   re-order them, and it does not decide which are shown. Both of those
+   used to happen here, and both were wrong -- "Cancelled" appeared first
+   whatever the Sheet said. */
+const KIND_TITLE = { cancelled: "Cancelled this term",
+                     quiz: "Next assessment",
+                     announcement: "Announcement" };
+
 function showState(st){
   const box = document.getElementById("state");
-  if (!st || !st.ok) { box.innerHTML = ""; return; }
-  const bits = [];
-  if (st.cancelled) bits.push("<b>Cancelled this term</b>" + esc(st.cancelled));
-  if (st.quiz)      bits.push("<b>Next assessment</b>" + esc(st.quiz));
-  (st.announcements || []).forEach(a => bits.push("<b>Announcement</b>" + esc(a)));
-  box.innerHTML = bits.map(b => '<div class="state">' + b + "</div>").join("");
+  if (!box) return;
+  if (!st || !st.ok || !st.items || !st.items.length){ box.innerHTML = ""; return; }
+  box.innerHTML = st.items.map(it => {
+    const lvl = ["normal", "important", "urgent"].indexOf(it.level) >= 0 ? it.level : "normal";
+    const title = KIND_TITLE[it.kind] || (it.kind.charAt(0).toUpperCase() + it.kind.slice(1));
+    return '<div class="state ' + lvl + '"><b>' + esc(title) + "</b>" + esc(it.text) + "</div>";
+  }).join("");
 }
 
 /* ---- signing in ---- */
@@ -1138,14 +1230,24 @@ function ask(){
   const top0 = res.list[0];
   deskLog(q, (top0 && top0.s >= MIN) ? top0.e.id : "", 0, false);
 
-  if (!res.list.length || res.list[0].s < MIN){
+  const top = res.list[0];
+
+  /* Three bands, not two. The middle one is the important addition: it is
+     the difference between a tutor that says "here is the answer" and one
+     that says "I am not sure this is a question about the course, but this
+     is the nearest thing I have". */
+  if (!top || top.base < OFFER_AT){
     hintLine.innerHTML = res.unmatched
-      ? "<b>No good match.</b> Some words were not recognised — try naming the idea, or the exercise."
-      : "<b>No good match.</b> This question went to the log.";
-    nothing(q, res.list.slice(0, 3).map(x => x.e));
+      ? "<b>Nothing matched.</b> Some words were not recognised — try naming the idea, or the exercise."
+      : "<b>Nothing matched.</b>";
+    nothing(q, res.list.slice(0, 3).map(x => x.e), false);
     return;
   }
-  const top = res.list[0];
+  if (top.base < ANSWER_AT){
+    hintLine.innerHTML = "<b>Not sure this is a question about this course.</b>";
+    nothing(q, res.list.slice(0, 3).map(x => x.e), true);
+    return;
+  }
   const second = res.list[1];
   const close = second && (top.s - second.s) < top.s * 0.18;
   hintLine.innerHTML = close
@@ -1242,6 +1344,12 @@ document.getElementById("clearlog").addEventListener("click", () => {
   document.getElementById("logn").textContent = "0";
   document.getElementById("logmiss").textContent = "0";
 });
+
+/* The log bar at the foot was built for the owner while he was testing on
+   his own computer. Once the desk is configured it is both redundant --
+   the desk records the same thing, and keeps it -- and confusing, because
+   it speaks to him and not to a student. */
+if (!DESK) document.getElementById("logbar").hidden = false;
 
 qBox.focus();
 startDesk();
