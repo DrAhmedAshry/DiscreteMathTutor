@@ -23,4 +23,4 @@ student takes three hints, or posts an attempt, and then the answer opens.
 `CourseMind/Tools/CMT20_BuildSite.py`. Do not edit it here; edit the library
 entry or the template and rebuild.
 
-Built 2026-08-31.
+Built 2026-09-01.
