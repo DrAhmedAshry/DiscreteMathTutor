@@ -1140,16 +1140,16 @@ function signInPanel(){
     '<div class="card">' +
       "<h2>Sign in</h2>" +
       "<p>This tutor is for GUC students of MATH-501/305. Fill in correct, official, and enough info — " +
-      "your full ID and <b>either</b> your <u>Lecture Group</u> <b>or</b> your name. " +
-      "A six-digit code will be sent to the address you give.</p>" +
-      '<label for="sid">ID number (uAppNo - including semester)</label>' +
-      '<input id="sid" placeholder="67-1862" autocomplete="username">' +
-      '<label for="sgrp">Your Lecture Group</label>' +
+      "your <b>ID</b> and <u>either</u> your <b>Lecture Group</b> <u>or</u> your <b>name</b>. " +
+      "<i>A six-digit code will be sent to the official GUC address you give</i>.</p>" +
+      '<label for="sid">Your <b>ID</b> (full uAppNo - including 2 semester digits)</label>' +
+      '<input id="sid" placeholder="65-4321" autocomplete="username">' +
+      '<label for="sgrp">Your <b>Lecture Group</b></label>' +
       '<select id="sgrp">' +
         '<option value="">I am not sure</option>' +
         GROUPS.map(g => '<option value="' + g + '">' + g + "</option>").join("") +
       "</select>" +
-      '<label for="snam">Your full <b>name</b> (as GUC writes it)</label>' +
+      '<label for="snam">Your <b>Name</b> (as GUC writes it)</label>' +
       '<input id="snam" autocomplete="name">' +
       '<label for="sem">Your <b>GUC email address</b></label>' +
       '<input id="sem" type="email" placeholder="…@student.guc.edu.eg" autocomplete="email">' +
