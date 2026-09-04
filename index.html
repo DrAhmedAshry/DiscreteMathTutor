@@ -1348,6 +1348,10 @@ function showWho(){
   if (!el) return;
   el.textContent = ME ? ("Signed in as " + (ME.name || ME.id) +
                          (ME.section ? " · " + ME.section : "")) : "";
+  /* Whoever we now know we are may be the owner, in which case the log
+     bar becomes visible. This is the only place that has to say so,
+     because every route into the page ends here. */
+  showLogBar();
 }
 
 /* ---- what happens at start-up ---- */
@@ -1505,17 +1509,29 @@ document.getElementById("clearlog").addEventListener("click", () => {
   document.getElementById("logmiss").textContent = "0";
 });
 
-/* The log bar at the foot was built for the owner while he was testing on
-   his own computer. Once the desk is configured it is both redundant --
-   the desk records the same thing, and keeps it -- and confusing, because
-   it speaks to him and not to a student. */
-if (!DESK){
-  document.getElementById("logbar").hidden = false;
+/* THE LOG BAR AT THE FOOT, AND WHO SEES IT
+   It counts the questions asked in this browser in this sitting, and can
+   copy them out as text. It was built for the owner while he was testing
+   on his own computer, before the desk existed.
+
+   It is shown in exactly two situations, and never otherwise:
+     * there is no desk at all -- then it is the only record of anything;
+     * the person came through the owner's own door (D-089), which sets
+       the section to OWNER. No student can ever have that section, so no
+       student ever sees the bar.
+
+   It shows nothing privileged. The questions in it were asked by whoever
+   is looking at it, in the window they are looking at. */
+function showLogBar(){
+  const bar = document.getElementById("logbar");
+  if (!bar || !bar.hidden) return;
+  if (DESK && !(ME && ME.section === "OWNER")) return;
+  bar.hidden = false;
   /* The bar is fixed to the foot of the window, so without this it would
-     stand on top of the signature. It appears only when there is no desk,
-     which is the owner's own copy. */
+     stand on top of the signature. */
   document.body.style.paddingBottom = "64px";
 }
+showLogBar();
 
 qBox.focus();
 startDesk();
